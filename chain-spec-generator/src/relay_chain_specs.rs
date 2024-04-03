@@ -223,6 +223,9 @@ pub fn polkadot_testnet_genesis(
 				})
 				.collect::<Vec<_>>(),
 		},
+		"sudo": {
+			"key": Some(_root_key),
+		},
 		"staking": {
 			"minimumValidatorCount": 1,
 			"validatorCount": initial_authorities.len() as u32,
@@ -285,6 +288,9 @@ pub fn kusama_testnet_genesis(
 					)
 				})
 				.collect::<Vec<_>>(),
+		},
+		"sudo": {
+			"key": Some(_root_key),
 		},
 		"staking": {
 			"minimumValidatorCount": 1,

@@ -761,16 +761,16 @@ impl pallet_staking::Config for Runtime {
 	type WeightInfo = weights::pallet_staking::WeightInfo<Runtime>;
 }
 
-impl pallet_fast_unstake::Config for Runtime {
-	type RuntimeEvent = RuntimeEvent;
-	type Currency = Balances;
-	type BatchSize = frame_support::traits::ConstU32<64>;
-	type Deposit = frame_support::traits::ConstU128<{ CENTS * 100 }>;
-	type ControlOrigin = EnsureRoot<AccountId>;
-	type Staking = Staking;
-	type MaxErasToCheckPerBlock = ConstU32<1>;
-	type WeightInfo = weights::pallet_fast_unstake::WeightInfo<Runtime>;
-}
+// impl pallet_fast_unstake::Config for Runtime {
+// 	type RuntimeEvent = RuntimeEvent;
+// 	type Currency = Balances;
+// 	type BatchSize = frame_support::traits::ConstU32<64>;
+// 	type Deposit = frame_support::traits::ConstU128<{ CENTS * 100 }>;
+// 	type ControlOrigin = EnsureRoot<AccountId>;
+// 	type Staking = Staking;
+// 	type MaxErasToCheckPerBlock = ConstU32<1>;
+// 	type WeightInfo = weights::pallet_fast_unstake::WeightInfo<Runtime>;
+// }
 
 parameter_types! {
 	pub const ProposalBond: Permill = Permill::from_percent(5);
@@ -1183,8 +1183,7 @@ impl InstanceFilter<RuntimeCall> for ProxyType {
 				RuntimeCall::Slots(..) |
 				RuntimeCall::Auctions(..) | // Specifically omitting the entire XCM Pallet
 				RuntimeCall::VoterList(..) |
-				RuntimeCall::NominationPools(..) |
-				RuntimeCall::FastUnstake(..)
+				RuntimeCall::NominationPools(..)
 			),
 			ProxyType::Governance => matches!(
 				c,
@@ -1204,7 +1203,6 @@ impl InstanceFilter<RuntimeCall> for ProxyType {
 					c,
 					RuntimeCall::Staking(..) |
 						RuntimeCall::Session(..) | RuntimeCall::Utility(..) |
-						RuntimeCall::FastUnstake(..) |
 						RuntimeCall::VoterList(..) |
 						RuntimeCall::NominationPools(..)
 				)
@@ -1641,6 +1639,12 @@ impl pallet_im_online::Config for Runtime {
 	type ValidatorSet = Historical;
 }
 
+impl pallet_sudo::Config for Runtime {
+	type RuntimeEvent = RuntimeEvent;
+	type RuntimeCall = RuntimeCall;
+	type WeightInfo = ();
+}
+
 construct_runtime! {
 	pub enum Runtime
 	{
@@ -1726,8 +1730,8 @@ construct_runtime! {
 		// nomination pools: extension to staking.
 		NominationPools: pallet_nomination_pools = 41,
 
-		// Fast unstake pallet: extension to staking.
-		FastUnstake: pallet_fast_unstake = 42,
+		// // Fast unstake pallet: extension to staking.
+		// FastUnstake: pallet_fast_unstake = 42,
 
 		// Parachains pallets. Start indices at 50 to leave room.
 		ParachainsOrigin: parachains_origin = 50,
@@ -1771,6 +1775,9 @@ construct_runtime! {
 
 		// Pallet for migrating Identity to a parachain. To be removed post-migration.
 		IdentityMigrator: identity_migrator = 248,
+
+		// Sudo.
+		Sudo: pallet_sudo = 255,
 	}
 }
 
